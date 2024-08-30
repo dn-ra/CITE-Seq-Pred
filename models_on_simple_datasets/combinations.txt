@@ -1,0 +1,560 @@
+CD3_TotalSeqB, 0, , 
+CD3_TotalSeqB, 0, , --cellbender_rna
+CD3_TotalSeqB, 0, --dsb_adt, 
+CD3_TotalSeqB, 0, --dsb_adt, --cellbender_rna
+CD3_TotalSeqB, 1, , 
+CD3_TotalSeqB, 1, , --cellbender_rna
+CD3_TotalSeqB, 1, --dsb_adt, 
+CD3_TotalSeqB, 1, --dsb_adt, --cellbender_rna
+CD3_TotalSeqB, 2, , 
+CD3_TotalSeqB, 2, , --cellbender_rna
+CD3_TotalSeqB, 2, --dsb_adt, 
+CD3_TotalSeqB, 2, --dsb_adt, --cellbender_rna
+CD3_TotalSeqB, 3, , 
+CD3_TotalSeqB, 3, , --cellbender_rna
+CD3_TotalSeqB, 3, --dsb_adt, 
+CD3_TotalSeqB, 3, --dsb_adt, --cellbender_rna
+CD3_TotalSeqB, 4, , 
+CD3_TotalSeqB, 4, , --cellbender_rna
+CD3_TotalSeqB, 4, --dsb_adt, 
+CD3_TotalSeqB, 4, --dsb_adt, --cellbender_rna
+CD3_TotalSeqB, 5, , 
+CD3_TotalSeqB, 5, , --cellbender_rna
+CD3_TotalSeqB, 5, --dsb_adt, 
+CD3_TotalSeqB, 5, --dsb_adt, --cellbender_rna
+CD3_TotalSeqB, 6, , 
+CD3_TotalSeqB, 6, , --cellbender_rna
+CD3_TotalSeqB, 6, --dsb_adt, 
+CD3_TotalSeqB, 6, --dsb_adt, --cellbender_rna
+CD3_TotalSeqB, 7, , 
+CD3_TotalSeqB, 7, , --cellbender_rna
+CD3_TotalSeqB, 7, --dsb_adt, 
+CD3_TotalSeqB, 7, --dsb_adt, --cellbender_rna
+CD3_TotalSeqB, 8, , 
+CD3_TotalSeqB, 8, , --cellbender_rna
+CD3_TotalSeqB, 8, --dsb_adt, 
+CD3_TotalSeqB, 8, --dsb_adt, --cellbender_rna
+CD3_TotalSeqB, 9, , 
+CD3_TotalSeqB, 9, , --cellbender_rna
+CD3_TotalSeqB, 9, --dsb_adt, 
+CD3_TotalSeqB, 9, --dsb_adt, --cellbender_rna
+CD4_TotalSeqB, 0, , 
+CD4_TotalSeqB, 0, , --cellbender_rna
+CD4_TotalSeqB, 0, --dsb_adt, 
+CD4_TotalSeqB, 0, --dsb_adt, --cellbender_rna
+CD4_TotalSeqB, 1, , 
+CD4_TotalSeqB, 1, , --cellbender_rna
+CD4_TotalSeqB, 1, --dsb_adt, 
+CD4_TotalSeqB, 1, --dsb_adt, --cellbender_rna
+CD4_TotalSeqB, 2, , 
+CD4_TotalSeqB, 2, , --cellbender_rna
+CD4_TotalSeqB, 2, --dsb_adt, 
+CD4_TotalSeqB, 2, --dsb_adt, --cellbender_rna
+CD4_TotalSeqB, 3, , 
+CD4_TotalSeqB, 3, , --cellbender_rna
+CD4_TotalSeqB, 3, --dsb_adt, 
+CD4_TotalSeqB, 3, --dsb_adt, --cellbender_rna
+CD4_TotalSeqB, 4, , 
+CD4_TotalSeqB, 4, , --cellbender_rna
+CD4_TotalSeqB, 4, --dsb_adt, 
+CD4_TotalSeqB, 4, --dsb_adt, --cellbender_rna
+CD4_TotalSeqB, 5, , 
+CD4_TotalSeqB, 5, , --cellbender_rna
+CD4_TotalSeqB, 5, --dsb_adt, 
+CD4_TotalSeqB, 5, --dsb_adt, --cellbender_rna
+CD4_TotalSeqB, 6, , 
+CD4_TotalSeqB, 6, , --cellbender_rna
+CD4_TotalSeqB, 6, --dsb_adt, 
+CD4_TotalSeqB, 6, --dsb_adt, --cellbender_rna
+CD4_TotalSeqB, 7, , 
+CD4_TotalSeqB, 7, , --cellbender_rna
+CD4_TotalSeqB, 7, --dsb_adt, 
+CD4_TotalSeqB, 7, --dsb_adt, --cellbender_rna
+CD4_TotalSeqB, 8, , 
+CD4_TotalSeqB, 8, , --cellbender_rna
+CD4_TotalSeqB, 8, --dsb_adt, 
+CD4_TotalSeqB, 8, --dsb_adt, --cellbender_rna
+CD4_TotalSeqB, 9, , 
+CD4_TotalSeqB, 9, , --cellbender_rna
+CD4_TotalSeqB, 9, --dsb_adt, 
+CD4_TotalSeqB, 9, --dsb_adt, --cellbender_rna
+CD8a_TotalSeqB, 0, , 
+CD8a_TotalSeqB, 0, , --cellbender_rna
+CD8a_TotalSeqB, 0, --dsb_adt, 
+CD8a_TotalSeqB, 0, --dsb_adt, --cellbender_rna
+CD8a_TotalSeqB, 1, , 
+CD8a_TotalSeqB, 1, , --cellbender_rna
+CD8a_TotalSeqB, 1, --dsb_adt, 
+CD8a_TotalSeqB, 1, --dsb_adt, --cellbender_rna
+CD8a_TotalSeqB, 2, , 
+CD8a_TotalSeqB, 2, , --cellbender_rna
+CD8a_TotalSeqB, 2, --dsb_adt, 
+CD8a_TotalSeqB, 2, --dsb_adt, --cellbender_rna
+CD8a_TotalSeqB, 3, , 
+CD8a_TotalSeqB, 3, , --cellbender_rna
+CD8a_TotalSeqB, 3, --dsb_adt, 
+CD8a_TotalSeqB, 3, --dsb_adt, --cellbender_rna
+CD8a_TotalSeqB, 4, , 
+CD8a_TotalSeqB, 4, , --cellbender_rna
+CD8a_TotalSeqB, 4, --dsb_adt, 
+CD8a_TotalSeqB, 4, --dsb_adt, --cellbender_rna
+CD8a_TotalSeqB, 5, , 
+CD8a_TotalSeqB, 5, , --cellbender_rna
+CD8a_TotalSeqB, 5, --dsb_adt, 
+CD8a_TotalSeqB, 5, --dsb_adt, --cellbender_rna
+CD8a_TotalSeqB, 6, , 
+CD8a_TotalSeqB, 6, , --cellbender_rna
+CD8a_TotalSeqB, 6, --dsb_adt, 
+CD8a_TotalSeqB, 6, --dsb_adt, --cellbender_rna
+CD8a_TotalSeqB, 7, , 
+CD8a_TotalSeqB, 7, , --cellbender_rna
+CD8a_TotalSeqB, 7, --dsb_adt, 
+CD8a_TotalSeqB, 7, --dsb_adt, --cellbender_rna
+CD8a_TotalSeqB, 8, , 
+CD8a_TotalSeqB, 8, , --cellbender_rna
+CD8a_TotalSeqB, 8, --dsb_adt, 
+CD8a_TotalSeqB, 8, --dsb_adt, --cellbender_rna
+CD8a_TotalSeqB, 9, , 
+CD8a_TotalSeqB, 9, , --cellbender_rna
+CD8a_TotalSeqB, 9, --dsb_adt, 
+CD8a_TotalSeqB, 9, --dsb_adt, --cellbender_rna
+CD14_TotalSeqB, 0, , 
+CD14_TotalSeqB, 0, , --cellbender_rna
+CD14_TotalSeqB, 0, --dsb_adt, 
+CD14_TotalSeqB, 0, --dsb_adt, --cellbender_rna
+CD14_TotalSeqB, 1, , 
+CD14_TotalSeqB, 1, , --cellbender_rna
+CD14_TotalSeqB, 1, --dsb_adt, 
+CD14_TotalSeqB, 1, --dsb_adt, --cellbender_rna
+CD14_TotalSeqB, 2, , 
+CD14_TotalSeqB, 2, , --cellbender_rna
+CD14_TotalSeqB, 2, --dsb_adt, 
+CD14_TotalSeqB, 2, --dsb_adt, --cellbender_rna
+CD14_TotalSeqB, 3, , 
+CD14_TotalSeqB, 3, , --cellbender_rna
+CD14_TotalSeqB, 3, --dsb_adt, 
+CD14_TotalSeqB, 3, --dsb_adt, --cellbender_rna
+CD14_TotalSeqB, 4, , 
+CD14_TotalSeqB, 4, , --cellbender_rna
+CD14_TotalSeqB, 4, --dsb_adt, 
+CD14_TotalSeqB, 4, --dsb_adt, --cellbender_rna
+CD14_TotalSeqB, 5, , 
+CD14_TotalSeqB, 5, , --cellbender_rna
+CD14_TotalSeqB, 5, --dsb_adt, 
+CD14_TotalSeqB, 5, --dsb_adt, --cellbender_rna
+CD14_TotalSeqB, 6, , 
+CD14_TotalSeqB, 6, , --cellbender_rna
+CD14_TotalSeqB, 6, --dsb_adt, 
+CD14_TotalSeqB, 6, --dsb_adt, --cellbender_rna
+CD14_TotalSeqB, 7, , 
+CD14_TotalSeqB, 7, , --cellbender_rna
+CD14_TotalSeqB, 7, --dsb_adt, 
+CD14_TotalSeqB, 7, --dsb_adt, --cellbender_rna
+CD14_TotalSeqB, 8, , 
+CD14_TotalSeqB, 8, , --cellbender_rna
+CD14_TotalSeqB, 8, --dsb_adt, 
+CD14_TotalSeqB, 8, --dsb_adt, --cellbender_rna
+CD14_TotalSeqB, 9, , 
+CD14_TotalSeqB, 9, , --cellbender_rna
+CD14_TotalSeqB, 9, --dsb_adt, 
+CD14_TotalSeqB, 9, --dsb_adt, --cellbender_rna
+CD15_TotalSeqB, 0, , 
+CD15_TotalSeqB, 0, , --cellbender_rna
+CD15_TotalSeqB, 0, --dsb_adt, 
+CD15_TotalSeqB, 0, --dsb_adt, --cellbender_rna
+CD15_TotalSeqB, 1, , 
+CD15_TotalSeqB, 1, , --cellbender_rna
+CD15_TotalSeqB, 1, --dsb_adt, 
+CD15_TotalSeqB, 1, --dsb_adt, --cellbender_rna
+CD15_TotalSeqB, 2, , 
+CD15_TotalSeqB, 2, , --cellbender_rna
+CD15_TotalSeqB, 2, --dsb_adt, 
+CD15_TotalSeqB, 2, --dsb_adt, --cellbender_rna
+CD15_TotalSeqB, 3, , 
+CD15_TotalSeqB, 3, , --cellbender_rna
+CD15_TotalSeqB, 3, --dsb_adt, 
+CD15_TotalSeqB, 3, --dsb_adt, --cellbender_rna
+CD15_TotalSeqB, 4, , 
+CD15_TotalSeqB, 4, , --cellbender_rna
+CD15_TotalSeqB, 4, --dsb_adt, 
+CD15_TotalSeqB, 4, --dsb_adt, --cellbender_rna
+CD15_TotalSeqB, 5, , 
+CD15_TotalSeqB, 5, , --cellbender_rna
+CD15_TotalSeqB, 5, --dsb_adt, 
+CD15_TotalSeqB, 5, --dsb_adt, --cellbender_rna
+CD15_TotalSeqB, 6, , 
+CD15_TotalSeqB, 6, , --cellbender_rna
+CD15_TotalSeqB, 6, --dsb_adt, 
+CD15_TotalSeqB, 6, --dsb_adt, --cellbender_rna
+CD15_TotalSeqB, 7, , 
+CD15_TotalSeqB, 7, , --cellbender_rna
+CD15_TotalSeqB, 7, --dsb_adt, 
+CD15_TotalSeqB, 7, --dsb_adt, --cellbender_rna
+CD15_TotalSeqB, 8, , 
+CD15_TotalSeqB, 8, , --cellbender_rna
+CD15_TotalSeqB, 8, --dsb_adt, 
+CD15_TotalSeqB, 8, --dsb_adt, --cellbender_rna
+CD15_TotalSeqB, 9, , 
+CD15_TotalSeqB, 9, , --cellbender_rna
+CD15_TotalSeqB, 9, --dsb_adt, 
+CD15_TotalSeqB, 9, --dsb_adt, --cellbender_rna
+CD16_TotalSeqB, 0, , 
+CD16_TotalSeqB, 0, , --cellbender_rna
+CD16_TotalSeqB, 0, --dsb_adt, 
+CD16_TotalSeqB, 0, --dsb_adt, --cellbender_rna
+CD16_TotalSeqB, 1, , 
+CD16_TotalSeqB, 1, , --cellbender_rna
+CD16_TotalSeqB, 1, --dsb_adt, 
+CD16_TotalSeqB, 1, --dsb_adt, --cellbender_rna
+CD16_TotalSeqB, 2, , 
+CD16_TotalSeqB, 2, , --cellbender_rna
+CD16_TotalSeqB, 2, --dsb_adt, 
+CD16_TotalSeqB, 2, --dsb_adt, --cellbender_rna
+CD16_TotalSeqB, 3, , 
+CD16_TotalSeqB, 3, , --cellbender_rna
+CD16_TotalSeqB, 3, --dsb_adt, 
+CD16_TotalSeqB, 3, --dsb_adt, --cellbender_rna
+CD16_TotalSeqB, 4, , 
+CD16_TotalSeqB, 4, , --cellbender_rna
+CD16_TotalSeqB, 4, --dsb_adt, 
+CD16_TotalSeqB, 4, --dsb_adt, --cellbender_rna
+CD16_TotalSeqB, 5, , 
+CD16_TotalSeqB, 5, , --cellbender_rna
+CD16_TotalSeqB, 5, --dsb_adt, 
+CD16_TotalSeqB, 5, --dsb_adt, --cellbender_rna
+CD16_TotalSeqB, 6, , 
+CD16_TotalSeqB, 6, , --cellbender_rna
+CD16_TotalSeqB, 6, --dsb_adt, 
+CD16_TotalSeqB, 6, --dsb_adt, --cellbender_rna
+CD16_TotalSeqB, 7, , 
+CD16_TotalSeqB, 7, , --cellbender_rna
+CD16_TotalSeqB, 7, --dsb_adt, 
+CD16_TotalSeqB, 7, --dsb_adt, --cellbender_rna
+CD16_TotalSeqB, 8, , 
+CD16_TotalSeqB, 8, , --cellbender_rna
+CD16_TotalSeqB, 8, --dsb_adt, 
+CD16_TotalSeqB, 8, --dsb_adt, --cellbender_rna
+CD16_TotalSeqB, 9, , 
+CD16_TotalSeqB, 9, , --cellbender_rna
+CD16_TotalSeqB, 9, --dsb_adt, 
+CD16_TotalSeqB, 9, --dsb_adt, --cellbender_rna
+CD56_TotalSeqB, 0, , 
+CD56_TotalSeqB, 0, , --cellbender_rna
+CD56_TotalSeqB, 0, --dsb_adt, 
+CD56_TotalSeqB, 0, --dsb_adt, --cellbender_rna
+CD56_TotalSeqB, 1, , 
+CD56_TotalSeqB, 1, , --cellbender_rna
+CD56_TotalSeqB, 1, --dsb_adt, 
+CD56_TotalSeqB, 1, --dsb_adt, --cellbender_rna
+CD56_TotalSeqB, 2, , 
+CD56_TotalSeqB, 2, , --cellbender_rna
+CD56_TotalSeqB, 2, --dsb_adt, 
+CD56_TotalSeqB, 2, --dsb_adt, --cellbender_rna
+CD56_TotalSeqB, 3, , 
+CD56_TotalSeqB, 3, , --cellbender_rna
+CD56_TotalSeqB, 3, --dsb_adt, 
+CD56_TotalSeqB, 3, --dsb_adt, --cellbender_rna
+CD56_TotalSeqB, 4, , 
+CD56_TotalSeqB, 4, , --cellbender_rna
+CD56_TotalSeqB, 4, --dsb_adt, 
+CD56_TotalSeqB, 4, --dsb_adt, --cellbender_rna
+CD56_TotalSeqB, 5, , 
+CD56_TotalSeqB, 5, , --cellbender_rna
+CD56_TotalSeqB, 5, --dsb_adt, 
+CD56_TotalSeqB, 5, --dsb_adt, --cellbender_rna
+CD56_TotalSeqB, 6, , 
+CD56_TotalSeqB, 6, , --cellbender_rna
+CD56_TotalSeqB, 6, --dsb_adt, 
+CD56_TotalSeqB, 6, --dsb_adt, --cellbender_rna
+CD56_TotalSeqB, 7, , 
+CD56_TotalSeqB, 7, , --cellbender_rna
+CD56_TotalSeqB, 7, --dsb_adt, 
+CD56_TotalSeqB, 7, --dsb_adt, --cellbender_rna
+CD56_TotalSeqB, 8, , 
+CD56_TotalSeqB, 8, , --cellbender_rna
+CD56_TotalSeqB, 8, --dsb_adt, 
+CD56_TotalSeqB, 8, --dsb_adt, --cellbender_rna
+CD56_TotalSeqB, 9, , 
+CD56_TotalSeqB, 9, , --cellbender_rna
+CD56_TotalSeqB, 9, --dsb_adt, 
+CD56_TotalSeqB, 9, --dsb_adt, --cellbender_rna
+CD19_TotalSeqB, 0, , 
+CD19_TotalSeqB, 0, , --cellbender_rna
+CD19_TotalSeqB, 0, --dsb_adt, 
+CD19_TotalSeqB, 0, --dsb_adt, --cellbender_rna
+CD19_TotalSeqB, 1, , 
+CD19_TotalSeqB, 1, , --cellbender_rna
+CD19_TotalSeqB, 1, --dsb_adt, 
+CD19_TotalSeqB, 1, --dsb_adt, --cellbender_rna
+CD19_TotalSeqB, 2, , 
+CD19_TotalSeqB, 2, , --cellbender_rna
+CD19_TotalSeqB, 2, --dsb_adt, 
+CD19_TotalSeqB, 2, --dsb_adt, --cellbender_rna
+CD19_TotalSeqB, 3, , 
+CD19_TotalSeqB, 3, , --cellbender_rna
+CD19_TotalSeqB, 3, --dsb_adt, 
+CD19_TotalSeqB, 3, --dsb_adt, --cellbender_rna
+CD19_TotalSeqB, 4, , 
+CD19_TotalSeqB, 4, , --cellbender_rna
+CD19_TotalSeqB, 4, --dsb_adt, 
+CD19_TotalSeqB, 4, --dsb_adt, --cellbender_rna
+CD19_TotalSeqB, 5, , 
+CD19_TotalSeqB, 5, , --cellbender_rna
+CD19_TotalSeqB, 5, --dsb_adt, 
+CD19_TotalSeqB, 5, --dsb_adt, --cellbender_rna
+CD19_TotalSeqB, 6, , 
+CD19_TotalSeqB, 6, , --cellbender_rna
+CD19_TotalSeqB, 6, --dsb_adt, 
+CD19_TotalSeqB, 6, --dsb_adt, --cellbender_rna
+CD19_TotalSeqB, 7, , 
+CD19_TotalSeqB, 7, , --cellbender_rna
+CD19_TotalSeqB, 7, --dsb_adt, 
+CD19_TotalSeqB, 7, --dsb_adt, --cellbender_rna
+CD19_TotalSeqB, 8, , 
+CD19_TotalSeqB, 8, , --cellbender_rna
+CD19_TotalSeqB, 8, --dsb_adt, 
+CD19_TotalSeqB, 8, --dsb_adt, --cellbender_rna
+CD19_TotalSeqB, 9, , 
+CD19_TotalSeqB, 9, , --cellbender_rna
+CD19_TotalSeqB, 9, --dsb_adt, 
+CD19_TotalSeqB, 9, --dsb_adt, --cellbender_rna
+CD25_TotalSeqB, 0, , 
+CD25_TotalSeqB, 0, , --cellbender_rna
+CD25_TotalSeqB, 0, --dsb_adt, 
+CD25_TotalSeqB, 0, --dsb_adt, --cellbender_rna
+CD25_TotalSeqB, 1, , 
+CD25_TotalSeqB, 1, , --cellbender_rna
+CD25_TotalSeqB, 1, --dsb_adt, 
+CD25_TotalSeqB, 1, --dsb_adt, --cellbender_rna
+CD25_TotalSeqB, 2, , 
+CD25_TotalSeqB, 2, , --cellbender_rna
+CD25_TotalSeqB, 2, --dsb_adt, 
+CD25_TotalSeqB, 2, --dsb_adt, --cellbender_rna
+CD25_TotalSeqB, 3, , 
+CD25_TotalSeqB, 3, , --cellbender_rna
+CD25_TotalSeqB, 3, --dsb_adt, 
+CD25_TotalSeqB, 3, --dsb_adt, --cellbender_rna
+CD25_TotalSeqB, 4, , 
+CD25_TotalSeqB, 4, , --cellbender_rna
+CD25_TotalSeqB, 4, --dsb_adt, 
+CD25_TotalSeqB, 4, --dsb_adt, --cellbender_rna
+CD25_TotalSeqB, 5, , 
+CD25_TotalSeqB, 5, , --cellbender_rna
+CD25_TotalSeqB, 5, --dsb_adt, 
+CD25_TotalSeqB, 5, --dsb_adt, --cellbender_rna
+CD25_TotalSeqB, 6, , 
+CD25_TotalSeqB, 6, , --cellbender_rna
+CD25_TotalSeqB, 6, --dsb_adt, 
+CD25_TotalSeqB, 6, --dsb_adt, --cellbender_rna
+CD25_TotalSeqB, 7, , 
+CD25_TotalSeqB, 7, , --cellbender_rna
+CD25_TotalSeqB, 7, --dsb_adt, 
+CD25_TotalSeqB, 7, --dsb_adt, --cellbender_rna
+CD25_TotalSeqB, 8, , 
+CD25_TotalSeqB, 8, , --cellbender_rna
+CD25_TotalSeqB, 8, --dsb_adt, 
+CD25_TotalSeqB, 8, --dsb_adt, --cellbender_rna
+CD25_TotalSeqB, 9, , 
+CD25_TotalSeqB, 9, , --cellbender_rna
+CD25_TotalSeqB, 9, --dsb_adt, 
+CD25_TotalSeqB, 9, --dsb_adt, --cellbender_rna
+CD45RA_TotalSeqB, 0, , 
+CD45RA_TotalSeqB, 0, , --cellbender_rna
+CD45RA_TotalSeqB, 0, --dsb_adt, 
+CD45RA_TotalSeqB, 0, --dsb_adt, --cellbender_rna
+CD45RA_TotalSeqB, 1, , 
+CD45RA_TotalSeqB, 1, , --cellbender_rna
+CD45RA_TotalSeqB, 1, --dsb_adt, 
+CD45RA_TotalSeqB, 1, --dsb_adt, --cellbender_rna
+CD45RA_TotalSeqB, 2, , 
+CD45RA_TotalSeqB, 2, , --cellbender_rna
+CD45RA_TotalSeqB, 2, --dsb_adt, 
+CD45RA_TotalSeqB, 2, --dsb_adt, --cellbender_rna
+CD45RA_TotalSeqB, 3, , 
+CD45RA_TotalSeqB, 3, , --cellbender_rna
+CD45RA_TotalSeqB, 3, --dsb_adt, 
+CD45RA_TotalSeqB, 3, --dsb_adt, --cellbender_rna
+CD45RA_TotalSeqB, 4, , 
+CD45RA_TotalSeqB, 4, , --cellbender_rna
+CD45RA_TotalSeqB, 4, --dsb_adt, 
+CD45RA_TotalSeqB, 4, --dsb_adt, --cellbender_rna
+CD45RA_TotalSeqB, 5, , 
+CD45RA_TotalSeqB, 5, , --cellbender_rna
+CD45RA_TotalSeqB, 5, --dsb_adt, 
+CD45RA_TotalSeqB, 5, --dsb_adt, --cellbender_rna
+CD45RA_TotalSeqB, 6, , 
+CD45RA_TotalSeqB, 6, , --cellbender_rna
+CD45RA_TotalSeqB, 6, --dsb_adt, 
+CD45RA_TotalSeqB, 6, --dsb_adt, --cellbender_rna
+CD45RA_TotalSeqB, 7, , 
+CD45RA_TotalSeqB, 7, , --cellbender_rna
+CD45RA_TotalSeqB, 7, --dsb_adt, 
+CD45RA_TotalSeqB, 7, --dsb_adt, --cellbender_rna
+CD45RA_TotalSeqB, 8, , 
+CD45RA_TotalSeqB, 8, , --cellbender_rna
+CD45RA_TotalSeqB, 8, --dsb_adt, 
+CD45RA_TotalSeqB, 8, --dsb_adt, --cellbender_rna
+CD45RA_TotalSeqB, 9, , 
+CD45RA_TotalSeqB, 9, , --cellbender_rna
+CD45RA_TotalSeqB, 9, --dsb_adt, 
+CD45RA_TotalSeqB, 9, --dsb_adt, --cellbender_rna
+CD45RO_TotalSeqB, 0, , 
+CD45RO_TotalSeqB, 0, , --cellbender_rna
+CD45RO_TotalSeqB, 0, --dsb_adt, 
+CD45RO_TotalSeqB, 0, --dsb_adt, --cellbender_rna
+CD45RO_TotalSeqB, 1, , 
+CD45RO_TotalSeqB, 1, , --cellbender_rna
+CD45RO_TotalSeqB, 1, --dsb_adt, 
+CD45RO_TotalSeqB, 1, --dsb_adt, --cellbender_rna
+CD45RO_TotalSeqB, 2, , 
+CD45RO_TotalSeqB, 2, , --cellbender_rna
+CD45RO_TotalSeqB, 2, --dsb_adt, 
+CD45RO_TotalSeqB, 2, --dsb_adt, --cellbender_rna
+CD45RO_TotalSeqB, 3, , 
+CD45RO_TotalSeqB, 3, , --cellbender_rna
+CD45RO_TotalSeqB, 3, --dsb_adt, 
+CD45RO_TotalSeqB, 3, --dsb_adt, --cellbender_rna
+CD45RO_TotalSeqB, 4, , 
+CD45RO_TotalSeqB, 4, , --cellbender_rna
+CD45RO_TotalSeqB, 4, --dsb_adt, 
+CD45RO_TotalSeqB, 4, --dsb_adt, --cellbender_rna
+CD45RO_TotalSeqB, 5, , 
+CD45RO_TotalSeqB, 5, , --cellbender_rna
+CD45RO_TotalSeqB, 5, --dsb_adt, 
+CD45RO_TotalSeqB, 5, --dsb_adt, --cellbender_rna
+CD45RO_TotalSeqB, 6, , 
+CD45RO_TotalSeqB, 6, , --cellbender_rna
+CD45RO_TotalSeqB, 6, --dsb_adt, 
+CD45RO_TotalSeqB, 6, --dsb_adt, --cellbender_rna
+CD45RO_TotalSeqB, 7, , 
+CD45RO_TotalSeqB, 7, , --cellbender_rna
+CD45RO_TotalSeqB, 7, --dsb_adt, 
+CD45RO_TotalSeqB, 7, --dsb_adt, --cellbender_rna
+CD45RO_TotalSeqB, 8, , 
+CD45RO_TotalSeqB, 8, , --cellbender_rna
+CD45RO_TotalSeqB, 8, --dsb_adt, 
+CD45RO_TotalSeqB, 8, --dsb_adt, --cellbender_rna
+CD45RO_TotalSeqB, 9, , 
+CD45RO_TotalSeqB, 9, , --cellbender_rna
+CD45RO_TotalSeqB, 9, --dsb_adt, 
+CD45RO_TotalSeqB, 9, --dsb_adt, --cellbender_rna
+PD-1_TotalSeqB, 0, , 
+PD-1_TotalSeqB, 0, , --cellbender_rna
+PD-1_TotalSeqB, 0, --dsb_adt, 
+PD-1_TotalSeqB, 0, --dsb_adt, --cellbender_rna
+PD-1_TotalSeqB, 1, , 
+PD-1_TotalSeqB, 1, , --cellbender_rna
+PD-1_TotalSeqB, 1, --dsb_adt, 
+PD-1_TotalSeqB, 1, --dsb_adt, --cellbender_rna
+PD-1_TotalSeqB, 2, , 
+PD-1_TotalSeqB, 2, , --cellbender_rna
+PD-1_TotalSeqB, 2, --dsb_adt, 
+PD-1_TotalSeqB, 2, --dsb_adt, --cellbender_rna
+PD-1_TotalSeqB, 3, , 
+PD-1_TotalSeqB, 3, , --cellbender_rna
+PD-1_TotalSeqB, 3, --dsb_adt, 
+PD-1_TotalSeqB, 3, --dsb_adt, --cellbender_rna
+PD-1_TotalSeqB, 4, , 
+PD-1_TotalSeqB, 4, , --cellbender_rna
+PD-1_TotalSeqB, 4, --dsb_adt, 
+PD-1_TotalSeqB, 4, --dsb_adt, --cellbender_rna
+PD-1_TotalSeqB, 5, , 
+PD-1_TotalSeqB, 5, , --cellbender_rna
+PD-1_TotalSeqB, 5, --dsb_adt, 
+PD-1_TotalSeqB, 5, --dsb_adt, --cellbender_rna
+PD-1_TotalSeqB, 6, , 
+PD-1_TotalSeqB, 6, , --cellbender_rna
+PD-1_TotalSeqB, 6, --dsb_adt, 
+PD-1_TotalSeqB, 6, --dsb_adt, --cellbender_rna
+PD-1_TotalSeqB, 7, , 
+PD-1_TotalSeqB, 7, , --cellbender_rna
+PD-1_TotalSeqB, 7, --dsb_adt, 
+PD-1_TotalSeqB, 7, --dsb_adt, --cellbender_rna
+PD-1_TotalSeqB, 8, , 
+PD-1_TotalSeqB, 8, , --cellbender_rna
+PD-1_TotalSeqB, 8, --dsb_adt, 
+PD-1_TotalSeqB, 8, --dsb_adt, --cellbender_rna
+PD-1_TotalSeqB, 9, , 
+PD-1_TotalSeqB, 9, , --cellbender_rna
+PD-1_TotalSeqB, 9, --dsb_adt, 
+PD-1_TotalSeqB, 9, --dsb_adt, --cellbender_rna
+TIGIT_TotalSeqB, 0, , 
+TIGIT_TotalSeqB, 0, , --cellbender_rna
+TIGIT_TotalSeqB, 0, --dsb_adt, 
+TIGIT_TotalSeqB, 0, --dsb_adt, --cellbender_rna
+TIGIT_TotalSeqB, 1, , 
+TIGIT_TotalSeqB, 1, , --cellbender_rna
+TIGIT_TotalSeqB, 1, --dsb_adt, 
+TIGIT_TotalSeqB, 1, --dsb_adt, --cellbender_rna
+TIGIT_TotalSeqB, 2, , 
+TIGIT_TotalSeqB, 2, , --cellbender_rna
+TIGIT_TotalSeqB, 2, --dsb_adt, 
+TIGIT_TotalSeqB, 2, --dsb_adt, --cellbender_rna
+TIGIT_TotalSeqB, 3, , 
+TIGIT_TotalSeqB, 3, , --cellbender_rna
+TIGIT_TotalSeqB, 3, --dsb_adt, 
+TIGIT_TotalSeqB, 3, --dsb_adt, --cellbender_rna
+TIGIT_TotalSeqB, 4, , 
+TIGIT_TotalSeqB, 4, , --cellbender_rna
+TIGIT_TotalSeqB, 4, --dsb_adt, 
+TIGIT_TotalSeqB, 4, --dsb_adt, --cellbender_rna
+TIGIT_TotalSeqB, 5, , 
+TIGIT_TotalSeqB, 5, , --cellbender_rna
+TIGIT_TotalSeqB, 5, --dsb_adt, 
+TIGIT_TotalSeqB, 5, --dsb_adt, --cellbender_rna
+TIGIT_TotalSeqB, 6, , 
+TIGIT_TotalSeqB, 6, , --cellbender_rna
+TIGIT_TotalSeqB, 6, --dsb_adt, 
+TIGIT_TotalSeqB, 6, --dsb_adt, --cellbender_rna
+TIGIT_TotalSeqB, 7, , 
+TIGIT_TotalSeqB, 7, , --cellbender_rna
+TIGIT_TotalSeqB, 7, --dsb_adt, 
+TIGIT_TotalSeqB, 7, --dsb_adt, --cellbender_rna
+TIGIT_TotalSeqB, 8, , 
+TIGIT_TotalSeqB, 8, , --cellbender_rna
+TIGIT_TotalSeqB, 8, --dsb_adt, 
+TIGIT_TotalSeqB, 8, --dsb_adt, --cellbender_rna
+TIGIT_TotalSeqB, 9, , 
+TIGIT_TotalSeqB, 9, , --cellbender_rna
+TIGIT_TotalSeqB, 9, --dsb_adt, 
+TIGIT_TotalSeqB, 9, --dsb_adt, --cellbender_rna
+CD127_TotalSeqB, 0, , 
+CD127_TotalSeqB, 0, , --cellbender_rna
+CD127_TotalSeqB, 0, --dsb_adt, 
+CD127_TotalSeqB, 0, --dsb_adt, --cellbender_rna
+CD127_TotalSeqB, 1, , 
+CD127_TotalSeqB, 1, , --cellbender_rna
+CD127_TotalSeqB, 1, --dsb_adt, 
+CD127_TotalSeqB, 1, --dsb_adt, --cellbender_rna
+CD127_TotalSeqB, 2, , 
+CD127_TotalSeqB, 2, , --cellbender_rna
+CD127_TotalSeqB, 2, --dsb_adt, 
+CD127_TotalSeqB, 2, --dsb_adt, --cellbender_rna
+CD127_TotalSeqB, 3, , 
+CD127_TotalSeqB, 3, , --cellbender_rna
+CD127_TotalSeqB, 3, --dsb_adt, 
+CD127_TotalSeqB, 3, --dsb_adt, --cellbender_rna
+CD127_TotalSeqB, 4, , 
+CD127_TotalSeqB, 4, , --cellbender_rna
+CD127_TotalSeqB, 4, --dsb_adt, 
+CD127_TotalSeqB, 4, --dsb_adt, --cellbender_rna
+CD127_TotalSeqB, 5, , 
+CD127_TotalSeqB, 5, , --cellbender_rna
+CD127_TotalSeqB, 5, --dsb_adt, 
+CD127_TotalSeqB, 5, --dsb_adt, --cellbender_rna
+CD127_TotalSeqB, 6, , 
+CD127_TotalSeqB, 6, , --cellbender_rna
+CD127_TotalSeqB, 6, --dsb_adt, 
+CD127_TotalSeqB, 6, --dsb_adt, --cellbender_rna
+CD127_TotalSeqB, 7, , 
+CD127_TotalSeqB, 7, , --cellbender_rna
+CD127_TotalSeqB, 7, --dsb_adt, 
+CD127_TotalSeqB, 7, --dsb_adt, --cellbender_rna
+CD127_TotalSeqB, 8, , 
+CD127_TotalSeqB, 8, , --cellbender_rna
+CD127_TotalSeqB, 8, --dsb_adt, 
+CD127_TotalSeqB, 8, --dsb_adt, --cellbender_rna
+CD127_TotalSeqB, 9, , 
+CD127_TotalSeqB, 9, , --cellbender_rna
+CD127_TotalSeqB, 9, --dsb_adt, 
+CD127_TotalSeqB, 9, --dsb_adt, --cellbender_rna
