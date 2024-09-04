@@ -314,7 +314,7 @@ config = {'dataset': args.dataset,
         'n_neighbors': args.n_neighbors}
 
 wandb.init(project='CITE-seq', entity='dnra-university-of-melbourne', group='GCN_various_denoising', config=config, tags = 
-           ['full-sweep','one-hop', 'graphing-together']])
+           ['full-sweep','one-hop', 'graphing-together'])
 
 
 loss_fn = nn.MSELoss()
