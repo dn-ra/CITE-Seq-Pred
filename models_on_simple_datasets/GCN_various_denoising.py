@@ -60,6 +60,8 @@ parser.add_argument('--kfold', required=True, choices = list(range(0,10)), type=
 parser.add_argument('--adt', choices = adt_options, required=True, help = 'ADT to predict')
 parser.add_argument('--batch_size', type=int, default=300, help='Batch size for training')  
 parser.add_argument('--epochs', type=int, default=60, help='Number of epochs to train for')
+parser.add_argument('--graph_strategy', choices=['together','separate'], default='together', help='Whether to build a single graph for train and test data together or build separate graphs')
+parser.add_argument('n_neighbors', type=int, default=20, help='Number of neighbors to include in the graph')
 #parser.add_argument('-j', '--jaccard_adjacency_thresh', type=float, default=0.1, help='Jaccard shared-neighbhor adjacency threshold for determining edges in the graph')
 #need to think about whether I should include a (no)scale ADT option for dsb normalised data. As per https://github.com/niaid/dsb/issues/34
 args = parser.parse_args()
@@ -130,8 +132,14 @@ test_obs = [cell for cell in kfold_dict[args.kfold]['test'] if cell in common_ce
 X_train, X_test = [rna_data[train_obs,:], rna_data[test_obs,:]]
 y_train, y_test = [adt_data[train_obs,:], adt_data[test_obs,:]]
 
+#decide whether to graph train and test data together or separately
+if args.graph_strategy == 'together':
+    x_data_to_graph = [rna_data]
+else:
+    x_data_to_graph = [X_train, X_test]
+
 #build edge index list for train and test X data
-for adata in [X_train, X_test]:
+for adata in x_data_to_graph:
     #T cell receptor genes to remove
     import re
     tcr_match = re.compile('^(HUMAN_)?TR[AB]')
@@ -147,16 +155,16 @@ for adata in [X_train, X_test]:
 
     #Nearest Neighbour Graph. Some confusion here about wheter it uses Jaccard to incorporate shared neighbours.
     #   https://github.com/scverse/scanpy/issues/277
-    sp.pp.neighbors(adata, n_neighbors=20, n_pcs=40, )  #default metric/norm is euclidean (l2)
+    sp.pp.neighbors(adata, n_neighbors=args.n_neighbors, n_pcs=40, )  #default metric/norm is euclidean (l2)
 
     adj = adata.obsp['distances']
     adj[adj.nonzero()] = 1
-    edge_list = torch.tensor(data = adj.A).nonzero().t().contiguous() #have checked here. each 'source' has 19 neighbors.
+    edge_list = torch.tensor(data = adj.A).nonzero().t().contiguous() #have checked here. each 'source' has args.n_neighbors -1 neighbors.
     adata.uns['edge_list'] = edge_list
     shared_neighbours = adj @ adj.transpose() #matrix multiply across rows of adjacency matrix
     jaccard_intersection = shared_neighbours.A * adj.A
 
-    jaccard_union = np.full(adj.shape, 38) #init union #probably don't need to init a whole matrix. just init a vector of the relevant pairs?
+    jaccard_union = np.full(adj.shape, 2*(args.n_neighbors -1)) #Default value is double the number of neighbors #init union #probably don't need to init a whole matrix. just init a vector of the relevant pairs?
     bool_arr = np.array(adj.toarray(), dtype='bool') #to allow OR operation 
     for source, target in zip(edge_list[0], edge_list[1]):
         jaccard_union[source, target] = np.logical_or(bool_arr[source,:], bool_arr[target,:]).sum()
@@ -186,22 +194,36 @@ print(data_splits)
 #      def __len__(self):
 #          return self.len
     
-train_data = tgDat(x = data_splits['train'][0].X, y = data_splits['train'][1][:,adt].X, edge_index = data_splits['train'][0].uns['edge_list'].flip([0]))
-test_data = tgDat(x = data_splits['test'][0].X, y = data_splits['test'][1][:,adt].X, edge_index = data_splits['test'][0].uns['edge_list'].flip([0]))
+#dataloaders
+if args.graph_strategy == 'together':
+    joined_data = tgDat(x = x_data_to_graph[0].X, y = adt_data[:,adt].X, edge_index = x_data_to_graph[0].uns['edge_list'].flip([0]))
+    train_loader = NeighborLoader(joined_data,
+                                input_nodes=torch.tensor(np.where(np.isin(x_data_to_graph[0].obs_names, train_obs))[0]),
+                                num_neighbors=[-1],
+                                batch_size=args.batch_size,
+                                replace=False,
+                                shuffle = True)
 
-#dataloader
-train_loader = NeighborLoader(train_data,
-                            input_nodes=torch.tensor(range(train_data.x.shape[0])),
-                            num_neighbors=[20],
-                            batch_size=args.batch_size,
-                            replace=False,
-                            shuffle=True)
+    test_loader = NeighborLoader(joined_data,
+                                input_nodes = torch.tensor(np.where(np.isin(x_data_to_graph[0].obs_names, test_obs))[0]),
+                                num_neighbors=[-1], #-1 uses all neighbors
+                                batch_size=x_data_to_graph[0].X.shape[0])
+else:
+    train_data = tgDat(x = data_splits['train'][0].X, y = data_splits['train'][1][:,adt].X, edge_index = data_splits['train'][0].uns['edge_list'].flip([0]))
+    test_data = tgDat(x = data_splits['test'][0].X, y = data_splits['test'][1][:,adt].X, edge_index = data_splits['test'][0].uns['edge_list'].flip([0]))
+
+    train_loader = NeighborLoader(train_data,
+                                input_nodes=torch.tensor(range(train_data.x.shape[0])),
+                                num_neighbors=[-1],
+                                batch_size=args.batch_size,
+                                replace=False,
+                                shuffle=True)
 
 
-test_loader = NeighborLoader(test_data, 
-                            input_nodes = None, #None uses all
-                            num_neighbors=[-1], #-1 uses all neighbors
-                            batch_size=test_data.x.shape[0])
+    test_loader = NeighborLoader(test_data, 
+                                input_nodes = None,
+                                num_neighbors=[-1], #-1 uses all neighbors
+                                batch_size=test_data.x.shape[0])
 
 ##GCN layer
 class TranscriptConv(MessagePassing):
@@ -255,7 +277,7 @@ class TranscriptConv(MessagePassing):
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
 print(f"Using {device} device")
 
-n_in, n_h1, n_h2, n_h3 = train_data.x.shape[1], 1000, 256, 64
+n_in, n_h1, n_h2, n_h3 = rna_data.shape[1], 1000, 256, 64
 
 class GCN(nn.Module):
     def __init__(self):
@@ -284,13 +306,15 @@ config = {'dataset': args.dataset,
         'ADT': adt,
         'kfold_idx': args.kfold,
         'feature_selection': '10000 highly_variable',
-        'n_train_samples': data_splits['train'][0].n_obs,
-        'n_test_samples': data_splits['test'][0].n_obs,
+        'n_train_samples': len(train_obs),
+        'n_test_samples': len(test_obs),
         'denoise_rna': 'cellbender' if args.cellbender_rna else None,
-        'denoise_adt': 'dsb' if args.dsb_adt else None}
+        'denoise_adt': 'dsb' if args.dsb_adt else None,
+        'graph_strategy': args.graph_strategy,
+        'n_neighbors': args.n_neighbors}
 
 wandb.init(project='CITE-seq', entity='dnra-university-of-melbourne', group='GCN_various_denoising', config=config, tags = 
-           ['full-sweep','one-hop'])
+           ['full-sweep','one-hop', 'graphing-together']])
 
 
 loss_fn = nn.MSELoss()
@@ -344,26 +368,31 @@ for e in range(epochs):
 #model.eval() #don't need this because I have no dropout and no normalisation layers
 
 #train preds
-all_train_loader = NeighborLoader(train_data, input_nodes=None, num_neighbors=[-1], batch_size=train_data.x.shape[0])
+if args.graph_strategy == 'together':
+    all_train_loader = NeighborLoader(joined_data, input_nodes=torch.tensor(np.where(np.isin(x_data_to_graph[0].obs_names, train_obs))[0]), 
+                                      num_neighbors=[-1], batch_size=len(train_obs))
+else:
+    all_train_loader = NeighborLoader(train_data, input_nodes=list(range(0,len(train_obs))), num_neighbors=[-1], batch_size=len(train_obs))
+    
 with torch.no_grad():
     for _, data in enumerate(all_train_loader):
-        train_pred = model(data.to(device))
+        train_pred = model(data.to(device))[:data.batch_size] #trim to batch nodes
 
 #test preds
 with torch.no_grad():
     for _, data in enumerate(test_loader):
-        test_pred = model(data.to(device))
+        test_pred = model(data.to(device))[:data.batch_size] #trim to batch nodes
 
 
 #log summary metrics
-train_true = data_splits['train'][1][:,adt].X.toarray().ravel()
+train_true = adt_data[train_obs,adt].X.toarray().ravel()
 train_preds = train_pred.squeeze().cpu().numpy()
 train_rmse = mean_squared_error(train_true, train_preds, squared = False)
 train_R2 = r2_score(train_true , train_preds)
 train_pearson, _ = pearsonr(train_true, train_preds)
 train_spearman, _ = spearmanr(train_true, train_preds)
 
-test_true = data_splits['test'][1][:,adt].X.toarray().ravel()
+test_true = adt_data[test_obs,adt].X.toarray().ravel()
 test_preds = test_pred.squeeze().cpu().numpy()
 test_rmse = mean_squared_error(test_true, test_preds, squared=False)
 test_R2 = r2_score(test_true, test_preds)
@@ -372,7 +401,7 @@ test_spearman, _ = spearmanr(test_true, test_preds)
 
 #log true and predicted values
 true_and_pred_df = pd.DataFrame({'test_true': test_true, 'test_preds': test_preds})
-true_and_pred_df['barcode'] = data_splits['test'][1].obs_names
+true_and_pred_df['barcode'] = test_obs
 #might be able to retrieve the following columns from metadata when retrieving tables, but include for now
 true_and_pred_df['adt'] = adt
 true_and_pred_df['kfold'] = args.kfold
@@ -400,7 +429,7 @@ wandb.log({'train_RMSE': train_rmse,
             'test_spearman': test_spearman,
             'true_and_predicted_values': table,
             'true_vs_pred_scatter_plot': wandb.Image(g.figure),
-            'training_vars': list(data_splits['train'][0].var_names)
+            'training_vars': list(rna_data.var_names)
             })
 
 # Not logging models. Takes too much space to store all at this stage
@@ -415,6 +444,5 @@ wandb.log({'train_RMSE': train_rmse,
 # wandb.log_artifact(artifact)
 
 wandb.finish()
-
 #delete model from local filesystem
 # os.remove(os.path.join('GCN_models_out',model_filename))
