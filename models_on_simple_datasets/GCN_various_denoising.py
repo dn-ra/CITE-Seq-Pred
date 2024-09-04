@@ -61,7 +61,7 @@ parser.add_argument('--adt', choices = adt_options, required=True, help = 'ADT t
 parser.add_argument('--batch_size', type=int, default=300, help='Batch size for training')  
 parser.add_argument('--epochs', type=int, default=60, help='Number of epochs to train for')
 parser.add_argument('--graph_strategy', choices=['together','separate'], default='together', help='Whether to build a single graph for train and test data together or build separate graphs')
-parser.add_argument('n_neighbors', type=int, default=20, help='Number of neighbors to include in the graph')
+parser.add_argument('--n_neighbors', type=int, default=20, help='Number of neighbors to include in the graph')
 #parser.add_argument('-j', '--jaccard_adjacency_thresh', type=float, default=0.1, help='Jaccard shared-neighbhor adjacency threshold for determining edges in the graph')
 #need to think about whether I should include a (no)scale ADT option for dsb normalised data. As per https://github.com/niaid/dsb/issues/34
 args = parser.parse_args()
