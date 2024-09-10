@@ -35,7 +35,7 @@ import sys
 
 #geometric imports
 from torch_geometric.nn import MessagePassing
-from torch_geometric.utils import add_remaining_self_loops, degree
+from torch_geometric.utils import add_remaining_self_loops, degree, scatter
 from torch_geometric.loader import NeighborLoader
 from torch_geometric.data import Data as tgDat
 
@@ -62,6 +62,7 @@ parser.add_argument('--batch_size', type=int, default=300, help='Batch size for 
 parser.add_argument('--epochs', type=int, default=60, help='Number of epochs to train for')
 parser.add_argument('--graph_strategy', choices=['together','separate'], default='together', help='Whether to build a single graph for train and test data together or build separate graphs')
 parser.add_argument('--n_neighbors', type=int, default=20, help='Number of neighbors to include in the graph')
+parser.add_argument('--weight_edges', action='store_true', help='Whether to weight edges in the graph')
 #parser.add_argument('-j', '--jaccard_adjacency_thresh', type=float, default=0.1, help='Jaccard shared-neighbhor adjacency threshold for determining edges in the graph')
 #need to think about whether I should include a (no)scale ADT option for dsb normalised data. As per https://github.com/niaid/dsb/issues/34
 args = parser.parse_args()
@@ -161,24 +162,39 @@ for adata in x_data_to_graph:
     adj[adj.nonzero()] = 1
     edge_list = torch.tensor(data = adj.A).nonzero().t().contiguous() #have checked here. each 'source' has args.n_neighbors -1 neighbors.
     adata.uns['edge_list'] = edge_list
-    shared_neighbours = adj @ adj.transpose() #matrix multiply across rows of adjacency matrix
-    jaccard_intersection = shared_neighbours.A * adj.A
+    if not args.weight_edges:
+        adata.uns['edge_weights'] = None 
+    else:
+        shared_neighbours = adj @ adj.transpose() #matrix multiply across rows of adjacency matrix
+        jaccard_intersection = shared_neighbours.A * adj.A
 
-    jaccard_union = np.full(adj.shape, 2*(args.n_neighbors -1)) #Default value is double the number of neighbors #init union #probably don't need to init a whole matrix. just init a vector of the relevant pairs?
-    bool_arr = np.array(adj.toarray(), dtype='bool') #to allow OR operation 
-    for source, target in zip(edge_list[0], edge_list[1]):
-        jaccard_union[source, target] = np.logical_or(bool_arr[source,:], bool_arr[target,:]).sum()
-    jaccard_mat = jaccard_intersection / jaccard_union
-    edge_idx = np.ravel_multi_index(edge_list.numpy(), jaccard_mat.shape)
-    edge_weights = jaccard_mat.take(edge_idx)
-    adata.uns['edge_weights'] = edge_weights
-    #thresh = args.jaccard_adjacency_thresh #threshold unused for now
+        jaccard_union = np.full(adj.shape, 2*(args.n_neighbors -1)) #Default value is double the number of neighbors #init union #probably don't need to init a whole matrix. just init a vector of the relevant pairs?
+        bool_arr = np.array(adj.toarray(), dtype='bool') #to allow OR operation 
+        for source, target in zip(edge_list[0], edge_list[1]):
+            jaccard_union[source, target] = np.logical_or(bool_arr[source,:], bool_arr[target,:]).sum()
+        jaccard_mat = jaccard_intersection / jaccard_union
+        edge_idx = np.ravel_multi_index(edge_list.numpy(), jaccard_mat.shape)
+        edge_weights = jaccard_mat.take(edge_idx)
+        adata.uns['edge_weights'] = edge_weights
+        #thresh = args.jaccard_adjacency_thresh #threshold unused for now
 
 #keep in dict format
 data_splits = {'train': [X_train, y_train], 'test': [X_test, y_test]}
 adt = args.adt
 print(data_splits)
-    
+
+def assert_same_weights(all_data, batch_data, original_nodes):
+    '''
+    Function to check that the edge weights are the same for the batched data and the original data. 
+    Otherwise might be getting the edges wrong when they are jumped up for batching.
+    For use when graph is made on train and test together.
+    '''
+    idx_for_origin_nodes_in_edge_list = [np.where(all_data.edge_index[1] == target)[0] for target in original_nodes]
+    vector_of_idx_for_origin_nodes_in_edge_list = np.concatenate(idx_for_origin_nodes_in_edge_list)
+    original_weights = torch.tensor(all_data.edge_weights[vector_of_idx_for_origin_nodes_in_edge_list])
+    batch_weights = batch_data.edge_weights
+    assert torch.allclose(original_weights, batch_weights), "Edge weights are not the same across original and batched data. May indicate incorrect batching."
+
 #Data class
 # class Data(tgDat):
 #     def __init__(self, X, y, edges):
@@ -197,6 +213,9 @@ print(data_splits)
 #dataloaders
 if args.graph_strategy == 'together':
     joined_data = tgDat(x = x_data_to_graph[0].X, y = adt_data[:,adt].X, edge_index = x_data_to_graph[0].uns['edge_list'].flip([0]))
+    if args.weight_edges:
+        joined_data.edge_weights = x_data_to_graph[0].uns['edge_weights']
+
     train_loader = NeighborLoader(joined_data,
                                 input_nodes=torch.tensor(np.where(np.isin(x_data_to_graph[0].obs_names, train_obs))[0]),
                                 num_neighbors=[-1],
@@ -207,10 +226,13 @@ if args.graph_strategy == 'together':
     test_loader = NeighborLoader(joined_data,
                                 input_nodes = torch.tensor(np.where(np.isin(x_data_to_graph[0].obs_names, test_obs))[0]),
                                 num_neighbors=[-1], #-1 uses all neighbors
-                                batch_size=x_data_to_graph[0].X.shape[0])
+                                batch_size=len(test_obs))
 else:
-    train_data = tgDat(x = data_splits['train'][0].X, y = data_splits['train'][1][:,adt].X, edge_index = data_splits['train'][0].uns['edge_list'].flip([0]))
-    test_data = tgDat(x = data_splits['test'][0].X, y = data_splits['test'][1][:,adt].X, edge_index = data_splits['test'][0].uns['edge_list'].flip([0]))
+    train_data = tgDat(x = data_splits['train'][0].X, y = data_splits['train'][1][:,adt].X, edge_index = data_splits['train'][0].uns['edge_list'].flip([0]), edge_weights = data_splits['train'][0].uns['edge_weights'])
+    test_data = tgDat(x = data_splits['test'][0].X, y = data_splits['test'][1][:,adt].X, edge_index = data_splits['test'][0].uns['edge_list'].flip([0]), edge_weights = data_splits['test'][0].uns['edge_weights'])
+    if args.weight_edges:
+        train_data.edge_weights = data_splits['train'][0].uns['edge_weights']
+        test_data.edge_weights = data_splits['test'][0].uns['edge_weights']
 
     train_loader = NeighborLoader(train_data,
                                 input_nodes=torch.tensor(range(train_data.x.shape[0])),
@@ -228,7 +250,7 @@ else:
 ##GCN layer
 class TranscriptConv(MessagePassing):
     def __init__(self, in_channels, out_channels):
-        super().__init__(aggr = 'mean')
+        super().__init__(aggr = 'add')
         #self.flow = 'target_to_source' #set to default of 'source_to_target' because edge_list has been flipped
         self.lin = nn.Linear(in_channels, out_channels, bias=False) #commented out to avoid transformation
         self.bias = nn.Parameter(torch.Tensor(out_channels)) #just tells the model that it's a parameter tensor.
@@ -241,13 +263,16 @@ class TranscriptConv(MessagePassing):
     
     def message(self, x_j, norm):
         return norm.view(-1,1) * x_j # .view() creates a new tensor, with -1 indicating that this dimension is inferred from the input
-                     
-    def forward(self, x, edge_index): #input to this is the transcript x cell data itself and the edge_index
+        # x_j are the node features of the neighbor
 
-        edge_index, _ = add_remaining_self_loops(edge_index, num_nodes= x.shape[0]) #this is needed so that it's own value is included in the mean
-            #self loops deactivated here to examine results of aggregation without modifying edge_list
+
+    def forward(self, x, edge_index, edge_weight = None): #input to this is the transcript x cell data itself and the edge_index
+
+        #must resolve here whether self loops have already been added. they may force len(index) to be greater than len(edge_weight)
+        edge_index, edge_weight = add_remaining_self_loops(edge_index, edge_attr = edge_weight, fill_value=1, num_nodes= x.shape[0]) #this is needed so that it's own value is included in the mean #By default gives edge_weight of 1
         
-              
+        x = self.lin(x) #linear transormation of input x.
+      
         #degree calculation, normalization
         #N = D^(-.5)AD^(-.5) #This isn't code - just the equation written down.
         #For directed graph the above has become N = D^(-1)A
@@ -262,11 +287,17 @@ class TranscriptConv(MessagePassing):
         deg_inv_sqrt[deg_inv_sqrt == float('inf')] = 0 #values which were 0 before being inversed put back to 0
         #when the edge is bi-direcitonal, it has to be normalised by in-degrees at target and source. for directed edge, just normalised by indegree at target.
         
-        norm = deg_inv_sqrt[row] #put in same order as edge index
+        #normalise edge weights
+        if edge_weight == None:
+            edge_weight_norm = None
+        else:
+            edge_sums = scatter(edge_weight, row, dim=0, reduce='sum') #sums all the edge weights for each node
+            edge_weight_norm = edge_weight / edge_sums[row]
+
+        #put in same order as edge index
+        norm = edge_weight_norm.float() if args.weight_edges else deg_inv_sqrt[row] #if not weighting edges, then just normalise by degree. Otherwise, normalise by edge weight.
         #And propogate. This is where the magic happens: function calls message(), aggregate(), and update() internally
         out = self.propagate(edge_index, x=x, norm=norm) #norm is required argument. 
-
-        out = self.lin(out) #linear transormation of input x.
 
         #Leave intercept in, but not sure if necessary
         out += self.bias #add bias to output
@@ -288,7 +319,7 @@ class GCN(nn.Module):
         self.fc3 = nn.Linear(n_h3, 1)
         
     def forward(self, data):
-        x = F.relu(self.transcript_conv1(data.x, data.edge_index))
+        x = F.relu(self.transcript_conv1(data.x, data.edge_index, data.edge_weights))
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
         x = self.fc3(x)
@@ -314,7 +345,7 @@ config = {'dataset': args.dataset,
         'n_neighbors': args.n_neighbors}
 
 wandb.init(project='CITE-seq', entity='dnra-university-of-melbourne', group='GCN_various_denoising', config=config, tags = 
-           ['full-sweep','one-hop', 'graphing-together'])
+           ['test-code','one-hop', 'graphing-together'])
 
 
 loss_fn = nn.MSELoss()
@@ -338,6 +369,10 @@ for e in range(epochs):
 
         #data.edge_index now has 19 edges for each unique target. This is because the edge_index has been flipped 
 
+        if args.graph_strategy == 'together' and args.weight_edges:
+            original_nodes = train_loader.input_nodes[data.input_id]
+            assert_same_weights(joined_data, data, original_nodes)
+ 
         y = data.y[:data.batch_size].to(device) #so we have to mask the non-target nodes
         #zero gradients
         optimizer.zero_grad()
