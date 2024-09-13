@@ -60,7 +60,7 @@ parser.add_argument('--kfold', required=True, choices = list(range(0,10)), type=
 parser.add_argument('--adt', choices = adt_options, required=True, help = 'ADT to predict')
 parser.add_argument('--batch_size', type=int, default=300, help='Batch size for training')  
 parser.add_argument('--epochs', type=int, default=60, help='Number of epochs to train for')
-parser.add_argument('--graph_strategy', choices=['together','separate'], default='together', help='Whether to build a single graph for train and test data together or build separate graphs')
+parser.add_argument('--graph_strategy', choices=['together','separate'], default='separate', help='Whether to build a single graph for train and test data together or build separate graphs')
 parser.add_argument('--n_neighbors', type=int, default=20, help='Number of neighbors to include in the graph')
 parser.add_argument('--weight_edges', action='store_true', help='Whether to weight edges in the graph')
 #parser.add_argument('-j', '--jaccard_adjacency_thresh', type=float, default=0.1, help='Jaccard shared-neighbhor adjacency threshold for determining edges in the graph')
@@ -216,15 +216,18 @@ if args.graph_strategy == 'together':
     if args.weight_edges:
         joined_data.edge_weights = x_data_to_graph[0].uns['edge_weights']
 
+    test_input_nodes = np.concatenate([np.where(x_data_to_graph[0].obs_names == cell)[0] for cell in test_obs]) #declaring input nodes here to ensure they are in same order of train_obs and test_obs
+    train_input_nodes = np.concatenate([np.where(x_data_to_graph[0].obs_names == cell)[0] for cell in train_obs])
+
     train_loader = NeighborLoader(joined_data,
-                                input_nodes=torch.tensor(np.where(np.isin(x_data_to_graph[0].obs_names, train_obs))[0]),
+                                input_nodes=train_input_nodes,
                                 num_neighbors=[-1],
                                 batch_size=args.batch_size,
                                 replace=False,
                                 shuffle = True)
 
     test_loader = NeighborLoader(joined_data,
-                                input_nodes = torch.tensor(np.where(np.isin(x_data_to_graph[0].obs_names, test_obs))[0]),
+                                input_nodes = test_input_nodes,
                                 num_neighbors=[-1], #-1 uses all neighbors
                                 batch_size=len(test_obs))
 else:
@@ -319,7 +322,7 @@ class GCN(nn.Module):
         self.fc3 = nn.Linear(n_h3, 1)
         
     def forward(self, data):
-        x = F.relu(self.transcript_conv1(data.x, data.edge_index, data.edge_weights))
+        x = F.relu(self.transcript_conv1(data.x, data.edge_index, data.edge_weights if args.weight_edges else None))
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
         x = self.fc3(x)
@@ -342,10 +345,11 @@ config = {'dataset': args.dataset,
         'denoise_rna': 'cellbender' if args.cellbender_rna else None,
         'denoise_adt': 'dsb' if args.dsb_adt else None,
         'graph_strategy': args.graph_strategy,
-        'n_neighbors': args.n_neighbors}
+        'n_neighbors': args.n_neighbors,
+        'weight_edges': args.weight_edges}
 
 wandb.init(project='CITE-seq', entity='dnra-university-of-melbourne', group='GCN_various_denoising', config=config, tags = 
-           ['test-code','one-hop', 'graphing-together'])
+           ['full-sweep','one-hop', 'add_aggregation'])
 
 
 loss_fn = nn.MSELoss()
@@ -404,7 +408,7 @@ for e in range(epochs):
 
 #train preds
 if args.graph_strategy == 'together':
-    all_train_loader = NeighborLoader(joined_data, input_nodes=torch.tensor(np.where(np.isin(x_data_to_graph[0].obs_names, train_obs))[0]), 
+    all_train_loader = NeighborLoader(joined_data, input_nodes=train_input_nodes, #train_input_nodes declared at init of train_loader
                                       num_neighbors=[-1], batch_size=len(train_obs))
 else:
     all_train_loader = NeighborLoader(train_data, input_nodes=list(range(0,len(train_obs))), num_neighbors=[-1], batch_size=len(train_obs))

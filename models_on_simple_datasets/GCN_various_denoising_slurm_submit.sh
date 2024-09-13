@@ -1,12 +1,12 @@
 #!/bin/bash
-#while IFS=',' read -r adt idx dsb_adt cellbender_rna; do 
+while IFS=',' read -r adt idx dsb_adt cellbender_rna; do 
 
 
 #dsb_adt='--dsb_adt'
 #cellbender_rna='--cellbender_rna'
 dataset='scvi'
-adt='CD25_TotalSeqB'
-idx=3
+#adt='CD3_TotalSeqB'
+#idx=3
     sbatch <<EOT
 #!/bin/bash
 #SBATCH --job-name=GCN_various_denoising_scvi
@@ -33,11 +33,11 @@ export WANDB_CACHE_DIR='/data/gpfs/projects/punim1597/Projects/CITE-seq/models_o
 conda activate scvi
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/danrawlinson/.conda/envs/scvi/lib/:/home/danrawlinson/.conda/envs/scvi/lib/python3.9/site-packages/tensorrt/
 python GCN_various_denoising.py --dataset $dataset --adt $adt --kfold $idx $dsb_adt $cellbender_rna \
-                                --epochs 10 --batch_size 100 --graph_strategy "together"                              
+                                --epochs 10 --batch_size 100 --graph_strategy "together"  --n_neighbors 20                         
 
 
 EOT
 
 
-#done < failed_GCN_graph_together_runs_240909.csv
+done < combinations.txt
 
