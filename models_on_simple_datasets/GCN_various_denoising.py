@@ -56,17 +56,33 @@ parser = argparse.ArgumentParser(description='Run NN training on CITE-seq data w
 parser.add_argument('--dataset', choices = ['scvi','nextgem'], help='Dataset to use', required=True)
 parser.add_argument('--cellbender_rna', action='store_true', help='Use cellbender denoised RNA data')
 parser.add_argument('--dsb_adt', action='store_true', help='Use DSB denoised ADT data')
-parser.add_argument('--kfold', required=True, choices = list(range(0,10)), type=int, help = 'Index of kfold (0-9) to use for partition splitting')
+parser.add_argument('--kfold', choices = list(range(0,10)), type=int, help = 'Index of kfold (0-9) to use for partition splitting')
 parser.add_argument('--adt', choices = adt_options, required=True, help = 'ADT to predict')
 parser.add_argument('--batch_size', type=int, default=300, help='Batch size for training')  
 parser.add_argument('--epochs', type=int, default=60, help='Number of epochs to train for')
-parser.add_argument('--graph_strategy', choices=['together','separate'], default='separate', help='Whether to build a single graph for train and test data together or build separate graphs')
+parser.add_argument('--graph_strategy', choices=['together','separate'], help='Whether to build a single graph for train and test data together or build separate graphs')
 parser.add_argument('--n_neighbors', type=int, default=20, help='Number of neighbors to include in the graph')
 parser.add_argument('--weight_edges', action='store_true', help='Whether to weight edges in the graph')
+parser.add_argument('--mode', choices = ['kfold', 'full_train'], default='kfold', help='Whether to train/test on kfold splits or train on full dataset and save model')
 #parser.add_argument('-j', '--jaccard_adjacency_thresh', type=float, default=0.1, help='Jaccard shared-neighbhor adjacency threshold for determining edges in the graph')
 #need to think about whether I should include a (no)scale ADT option for dsb normalised data. As per https://github.com/niaid/dsb/issues/34
 args = parser.parse_args()
 
+#handle incompatible arguments
+if args.mode == 'full_train' and args.kfold:
+        print("Error: --model full_train cannot be called with a --kfold argument.")
+        sys.exit(1)
+if not args.kfold and args.mode == 'kfold':
+    print("Error: --model kfold must be called with a --kfold argument.")
+    sys.exit(1)
+if args.model == 'full_train' and args.graph_strategy:
+    print("Error: --model full_train cannot be called with a --graph_strategy argument.")
+    sys.exit(1)
+if args.mode == 'kfold' and not args.graph_strategy:
+    print("Error: --model kfold must be called with a --graph_strategy argument.")
+    sys.exit(1)
+
+#handle dataset specific paths
 if args.dataset == 'scvi':
     rna_cellbender_path = os.path.join(data_dir, 'scvi_data', 'cellbender_out', 'cellbender_denoised_filtered.h5')
     rna_path = os.path.join(data_dir, 'scvi_data', 'scvi_rna.prepd.h5ad')
@@ -134,7 +150,7 @@ X_train, X_test = [rna_data[train_obs,:], rna_data[test_obs,:]]
 y_train, y_test = [adt_data[train_obs,:], adt_data[test_obs,:]]
 
 #decide whether to graph train and test data together or separately
-if args.graph_strategy == 'together':
+if args.graph_strategy == 'together' or args.mode == 'full_train':
     x_data_to_graph = [rna_data]
 else:
     x_data_to_graph = [X_train, X_test]
@@ -186,7 +202,7 @@ print(data_splits)
 def assert_same_weights(all_data, batch_data, original_nodes):
     '''
     Function to check that the edge weights are the same for the batched data and the original data. 
-    Otherwise might be getting the edges wrong when they are jumped up for batching.
+    Otherwise might be getting the edges wrong when they are jumbled up for batching.
     For use when graph is made on train and test together.
     '''
     idx_for_origin_nodes_in_edge_list = [np.where(all_data.edge_index[1] == target)[0] for target in original_nodes]
@@ -211,7 +227,19 @@ def assert_same_weights(all_data, batch_data, original_nodes):
 #          return self.len
     
 #dataloaders
-if args.graph_strategy == 'together':
+if args.mode == 'full_train':
+    joined_data = tgDat(x = x_data_to_graph[0].X, y = adt_data[:,adt].X, edge_index = x_data_to_graph[0].uns['edge_list'].flip([0]))
+    if args.weight_edges:
+        joined_data.edge_weights = x_data_to_graph[0].uns['edge_weights']
+    
+    train_loader = NeighborLoader(joined_data,
+                                input_nodes=torch.tensor(range(joined_data.x.shape[0])),
+                                num_neighbors=[-1],
+                                batch_size=args.batch_size,
+                                replace=False,
+                                shuffle=True)
+
+elif args.graph_strategy == 'together':
     joined_data = tgDat(x = x_data_to_graph[0].X, y = adt_data[:,adt].X, edge_index = x_data_to_graph[0].uns['edge_list'].flip([0]))
     if args.weight_edges:
         joined_data.edge_weights = x_data_to_graph[0].uns['edge_weights']
@@ -349,7 +377,7 @@ config = {'dataset': args.dataset,
         'weight_edges': args.weight_edges}
 
 wandb.init(project='CITE-seq', entity='dnra-university-of-melbourne', group='GCN_various_denoising', config=config, tags = 
-           ['full-sweep','one-hop', 'add_aggregation'])
+           ['full-sweep','one-hop', 'add_aggregation','fixed_metric_eval', 'graphing_together','weighted_edges'])
 
 
 loss_fn = nn.MSELoss()
@@ -390,16 +418,19 @@ for e in range(epochs):
         total_batches += 1
 
         if total_batches % log_freq == 0:
-            #calc test loss at each update point
-            with torch.no_grad():
-                for _, data in enumerate(test_loader): #just one in this iterator
-                    y = data.y[:data.batch_size].to(device) #trim to batch nodes #not really necessary when using all nodes in test test_loader
-                    test_pred = model(data.to(device))
-                    test_pred = test_pred[:data.batch_size] #trim to batch nodes
-                    test_loss = loss_fn(test_pred.squeeze(),y.squeeze())
+            if args.model == 'full_train':
+                test_loss = None
+            else:
+                #calc test loss at each update point
+                with torch.no_grad():
+                    for _, data in enumerate(test_loader): #just one in this iterator
+                        y = data.y[:data.batch_size].to(device) #trim to batch nodes #not really necessary when using all nodes in test test_loader
+                        test_pred = model(data.to(device))
+                        test_pred = test_pred[:data.batch_size] #trim to batch nodes
+                        test_loss = loss_fn(test_pred.squeeze(),y.squeeze())
             #log metrics
-            wandb.log({'train_loss': loss.item(), 'test_loss': test_loss.item(),'epoch': e, 'batch': idx})
-            sys.stdout.write(f'Epoch {e}, Batch {idx}, Train Loss {loss.item()}, Test Loss {test_loss.item()}\n')
+            wandb.log({'train_loss': loss.item(), 'test_loss': None if not test_loss else test_loss.item(),'epoch': e, 'batch': idx})
+            sys.stdout.write(f'Epoch {e}, Batch {idx}, Train Loss {loss.item()}, Test Loss {None if not test_loss else test_loss.item()}\n')
             sys.stdout.flush()
 
 
@@ -407,7 +438,10 @@ for e in range(epochs):
 #model.eval() #don't need this because I have no dropout and no normalisation layers
 
 #train preds
-if args.graph_strategy == 'together':
+if args.mode == 'full_train':
+    all_train_loader = train_loader
+    all_train_loader.batch_size = all_train_loader.dataset.x.shape[0] #set batch size to all samples
+elif args.graph_strategy == 'together' and args.model == 'kfold':
     all_train_loader = NeighborLoader(joined_data, input_nodes=train_input_nodes, #train_input_nodes declared at init of train_loader
                                       num_neighbors=[-1], batch_size=len(train_obs))
 else:
@@ -418,9 +452,10 @@ with torch.no_grad():
         train_pred = model(data.to(device))[:data.batch_size] #trim to batch nodes
 
 #test preds
-with torch.no_grad():
-    for _, data in enumerate(test_loader):
-        test_pred = model(data.to(device))[:data.batch_size] #trim to batch nodes
+if args.mode == 'kfold':
+    with torch.no_grad():
+        for _, data in enumerate(test_loader):
+            test_pred = model(data.to(device))[:data.batch_size] #trim to batch nodes
 
 
 #log summary metrics
@@ -431,56 +466,58 @@ train_R2 = r2_score(train_true , train_preds)
 train_pearson, _ = pearsonr(train_true, train_preds)
 train_spearman, _ = spearmanr(train_true, train_preds)
 
-test_true = adt_data[test_obs,adt].X.toarray().ravel()
-test_preds = test_pred.squeeze().cpu().numpy()
-test_rmse = mean_squared_error(test_true, test_preds, squared=False)
-test_R2 = r2_score(test_true, test_preds)
-test_pearson, _ =  pearsonr(test_true, test_preds)
-test_spearman, _ = spearmanr(test_true, test_preds)
+if args.mode  == 'kfold':
+    test_true = adt_data[test_obs,adt].X.toarray().ravel()
+    test_preds = test_pred.squeeze().cpu().numpy()
+    test_rmse = mean_squared_error(test_true, test_preds, squared=False)
+    test_R2 = r2_score(test_true, test_preds)
+    test_pearson, _ =  pearsonr(test_true, test_preds)
+    test_spearman, _ = spearmanr(test_true, test_preds)
 
-#log true and predicted values
-true_and_pred_df = pd.DataFrame({'test_true': test_true, 'test_preds': test_preds})
-true_and_pred_df['barcode'] = test_obs
-#might be able to retrieve the following columns from metadata when retrieving tables, but include for now
-true_and_pred_df['adt'] = adt
-true_and_pred_df['kfold'] = args.kfold
-true_and_pred_df['cellbender_rna'] = True if args.cellbender_rna else False
-true_and_pred_df['dsb_adt'] = True if args.dsb_adt else False
-true_and_pred_df['model'] = config['model']
-true_and_pred_df['dataset'] = args.dataset
+    #log true and predicted values
+    true_and_pred_df = pd.DataFrame({'test_true': test_true, 'test_preds': test_preds})
+    true_and_pred_df['barcode'] = test_obs
+    #might be able to retrieve the following columns from metadata when retrieving tables, but include for now
+    true_and_pred_df['adt'] = adt
+    true_and_pred_df['kfold'] = args.kfold 
+    true_and_pred_df['cellbender_rna'] = True if args.cellbender_rna else False
+    true_and_pred_df['dsb_adt'] = True if args.dsb_adt else False
+    true_and_pred_df['model'] = config['model']
+    true_and_pred_df['dataset'] = args.dataset
 
-#table for logging
-table = wandb.Table(dataframe=true_and_pred_df)
+    #table for logging
+    table = wandb.Table(dataframe=true_and_pred_df)
 
-#create and log plot
-g = sns.jointplot(data=true_and_pred_df , x = 'test_true', y = 'test_preds', 
-                  kind = 'reg', line_kws={'color': 'red'}, scatter_kws={'s': 1},
-                  truncate = False)
-g.set_axis_labels(f'{adt} True', f'{adt} Predicted')
+    #create and log plot
+    g = sns.jointplot(data=true_and_pred_df , x = 'test_true', y = 'test_preds', 
+                    kind = 'reg', line_kws={'color': 'red'}, scatter_kws={'s': 1},
+                    truncate = False)
+    g.set_axis_labels(f'{adt} True', f'{adt} Predicted')
 
 wandb.log({'train_RMSE': train_rmse,
             'train_R2': train_R2,
             'train_pearson': train_pearson,
             'train_spearman': train_spearman,
-            'test_RMSE': test_rmse,
-            'test_R2': test_R2,
-            'test_pearson': test_pearson,
-            'test_spearman': test_spearman,
-            'true_and_predicted_values': table,
-            'true_vs_pred_scatter_plot': wandb.Image(g.figure),
+            'test_RMSE': test_rmse if args.mode == 'kfold' else None,
+            'test_R2': test_R2 if args.mode == 'kfold' else None,
+            'test_pearson': test_pearson if args.mode == 'kfold' else None,
+            'test_spearman': test_spearman if args.mode == 'kfold' else None,
+            'true_and_predicted_values': table if args.mode == 'kfold' else None,
+            'true_vs_pred_scatter_plot': wandb.Image(g.figure) if args.mode == 'kfold' else None,
             'training_vars': list(rna_data.var_names)
             })
 
-# Not logging models. Takes too much space to store all at this stage
-# model_name = f"GCN_model_{adt}_{args.kfold}_{args.cellbender_rna}_{args.dsb_adt}"
-# model_filename = f"{model_name}.pkl"
-# with open(os.path.join('GCN_models_out',model_filename), 'wb') as file:
-#     pickle.dump(model, file)
+# Logging models only in full-train mode
+if args.mode == 'full_train':
+    model_name = f"GCN_model_{args.data}_{adt}_{args.cellbender_rna}_{args.dsb_adt}"
+    model_filename = f"{model_name}.pkl"
+    with open(os.path.join('GCN_models_out',model_filename), 'wb') as file:
+        pickle.dump(model, file)
 
-# Log the model artifact
-# artifact = wandb.Artifact(model_name, type='model')
-# artifact.add_file(os.path.join('GCN_models_out',model_filename))
-# wandb.log_artifact(artifact)
+    # Log the model artifact
+    artifact = wandb.Artifact(model_name, type='model')
+    artifact.add_file(os.path.join('GCN_models_out',model_filename))
+    wandb.log_artifact(artifact)
 
 wandb.finish()
 #delete model from local filesystem
